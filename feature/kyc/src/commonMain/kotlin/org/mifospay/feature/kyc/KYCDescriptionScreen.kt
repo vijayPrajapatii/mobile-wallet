@@ -97,7 +97,7 @@ private fun KYCDescriptionScreen(
                     title = stringResource(Res.string.feature_kyc_error_oops),
                     subTitle = stringResource(Res.string.feature_kyc_unexpected_error_subtitle),
                     modifier = Modifier,
-                    iconTint = MaterialTheme.colorScheme.primary,
+                    iconTint = MaterialTheme.colorScheme.error,
                 )
             }
 
@@ -174,9 +174,9 @@ private fun KYCLevelCard(
             shape = RoundedCornerShape(4.dp),
             colors = CardDefaults.outlinedCardColors(
                 containerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
             ),
-            border = CardDefaults.outlinedCardBorder(true),
+            border = CardDefaults.outlinedCardBorder(enabled = true),
             modifier = Modifier.weight(2.5f, false),
         ) {
             ListItem(
@@ -184,14 +184,16 @@ private fun KYCLevelCard(
                     Text(text = title)
                 },
                 leadingContent = {
-                    AvatarBox(icon = icon)
+                    AvatarBox(
+                        icon = icon,
+                        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                    )
                 },
                 trailingContent = {
                     if (completed) {
                         Icon(
                             imageVector = MifosIcons.OutlinedDoneAll,
                             contentDescription = stringResource(Res.string.feature_kyc_check),
-                            tint = MaterialTheme.colorScheme.primary,
                         )
                     }
                 },

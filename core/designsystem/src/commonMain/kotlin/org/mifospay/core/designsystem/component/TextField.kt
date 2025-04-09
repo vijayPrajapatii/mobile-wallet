@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,7 +37,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -44,9 +44,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.mifospay.core.designsystem.icon.MifosIcons
-import org.mifospay.core.designsystem.theme.NewUi
 
 @Composable
 fun MifosOutlinedTextField(
@@ -62,6 +60,7 @@ fun MifosOutlinedTextField(
     clearIcon: ImageVector = MifosIcons.Close,
     onClickClearIcon: () -> Unit = { onValueChange("") },
     onKeyboardActions: (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -104,8 +103,9 @@ fun MifosOutlinedTextField(
         keyboardOptions = keyboardOptions,
         interactionSource = interactionSource,
         textStyle = LocalDensity.current.run {
-            TextStyle(fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface)
+            TextStyle(color = MaterialTheme.colorScheme.onSurface)
         },
+        placeholder = placeholder,
     )
 }
 
@@ -122,13 +122,13 @@ fun MifosTextField(
     isError: Boolean = false,
     errorText: String? = null,
     onClickClearIcon: () -> Unit = { onValueChange("") },
-    textStyle: TextStyle = LocalTextStyle.current,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    maxLines: Int = if (singleLine) 1 else Int.Companion.MAX_VALUE,
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    placeholder: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
     trailingIcon: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -140,7 +140,6 @@ fun MifosTextField(
         value = value,
         label = label,
         onValueChange = onValueChange,
-        textStyle = textStyle,
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         readOnly = readOnly,
@@ -168,15 +167,17 @@ fun MifosTextField(
                 }
             }
         },
+        placeholder = placeholder,
         supportingText = errorText?.let {
             {
                 Text(
-                    modifier = Modifier.testTag("errorTag"),
                     text = it,
-                    style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error,
                 )
             }
+        },
+        textStyle = LocalDensity.current.run {
+            TextStyle(color = MaterialTheme.colorScheme.onSurface)
         },
     )
 }
@@ -201,19 +202,22 @@ fun MifosCustomTextField(
     isError: Boolean = false,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+    placeholder: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
 ) {
-    val colors = TextFieldDefaults.colors().copy(
-        cursorColor = MaterialTheme.colorScheme.primary,
+    val colors = TextFieldDefaults.colors(
+        focusedLabelColor = MaterialTheme.colorScheme.primary,
+        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+        cursorColor = MaterialTheme.colorScheme.onSurface,
         focusedContainerColor = Color.Transparent,
         unfocusedContainerColor = Color.Transparent,
         errorContainerColor = Color.Transparent,
         focusedIndicatorColor = MaterialTheme.colorScheme.primary,
         unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
-        focusedTrailingIconColor = NewUi.onSurface.copy(0.5f),
-        unfocusedTrailingIconColor = NewUi.onSurface.copy(0.5f),
+        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface.copy(0.15f),
+        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurface.copy(0.15f),
     )
     BasicTextField(
         value = value,
@@ -241,11 +245,11 @@ fun MifosCustomTextField(
             label = {
                 Text(
                     text = label,
-                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(bottom = 10.dp),
                 )
             },
+            placeholder = placeholder,
             trailingIcon = trailingIcon,
             leadingIcon = leadingIcon,
             supportingText = supportingText,
@@ -287,6 +291,7 @@ fun MifosCustomTextField(
     isError: Boolean = false,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+    placeholder: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
@@ -298,8 +303,8 @@ fun MifosCustomTextField(
         errorContainerColor = Color.Transparent,
         focusedIndicatorColor = MaterialTheme.colorScheme.primary,
         unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
-        focusedTrailingIconColor = NewUi.onSurface.copy(0.15f),
-        unfocusedTrailingIconColor = NewUi.onSurface.copy(0.15f),
+        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface.copy(0.15f),
+        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurface.copy(0.15f),
     )
     BasicTextField(
         value = value,
@@ -337,6 +342,7 @@ fun MifosCustomTextField(
             supportingText = supportingText,
             colors = colors,
             isError = isError,
+            placeholder = placeholder,
             contentPadding = PaddingValues(bottom = 10.dp),
             container = {
                 TextFieldDefaults.Container(
@@ -359,6 +365,8 @@ private fun ClearIconButton(
     clearIcon: ImageVector,
     onClickClearIcon: () -> Unit,
     modifier: Modifier = Modifier,
+    containerColor: Color = Color.Unspecified,
+    contentColor: Color = MaterialTheme.colorScheme.primary,
 ) {
     AnimatedVisibility(
         visible = showClearIcon,
@@ -369,6 +377,10 @@ private fun ClearIconButton(
             modifier = Modifier.semantics {
                 contentDescription = "clearIcon"
             },
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = containerColor,
+                contentColor = contentColor,
+            ),
         ) {
             Icon(
                 imageVector = clearIcon,
