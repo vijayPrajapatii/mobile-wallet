@@ -41,7 +41,7 @@ abstract class BaseViewModel<S, E, A>(
     /**
      * A helper that returns the current state of the view model.
      */
-    protected val state: S get() = mutableStateFlow.value
+    val state: S get() = mutableStateFlow.value
 
     /**
      * A [StateFlow] representing state updates.

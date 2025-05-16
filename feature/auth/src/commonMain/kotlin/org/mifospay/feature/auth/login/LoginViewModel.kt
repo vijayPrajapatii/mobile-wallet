@@ -36,7 +36,7 @@ class LoginViewModel(
         }
     }
 
-    override fun handleAction(action: LoginAction) {
+    public override fun handleAction(action: LoginAction) {
         when (action) {
             is LoginAction.UsernameChanged -> {
                 mutableStateFlow.update {

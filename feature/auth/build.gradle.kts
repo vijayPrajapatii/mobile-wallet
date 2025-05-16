@@ -31,7 +31,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.jb.kotlin.stdlib)
             implementation(libs.kotlin.reflect)
-        }
+  }
 
         androidMain.dependencies {
             // Credentials Manager
@@ -42,6 +42,13 @@ kotlin {
             implementation(libs.googleid)
 
             implementation(libs.play.services.auth)
+        }
+        // Add Android-specific test dependencies
+        // Change androidTest to androidUnitTest
+        androidUnitTest.dependencies {
+            implementation("io.mockk:mockk:1.13.8")
+            implementation("org.jetbrains.kotlin:kotlin-test-junit")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
         }
     }
 }
